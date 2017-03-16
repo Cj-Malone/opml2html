@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>OPML 2 Markdown via JS</title>
+    <script type="text/javascript">
+
+var opml2html = {
+
+    html_template: '# {OPMLTITLE}\n{ITEMS}',
+    item_template: '- \[[{XMLTYPE}]({XMLURL})\] [{TITLE}]({HTMLURL})\n',
+    parse: function(opml) {
+
+        var doc;
+        // code for IE
+        if (window.ActiveXObject) {
+            doc = new ActiveXObject("Microsoft.XMLDOM");
+            doc.async = false;
+            doc.loadXML(opml);
+        // code for Mozilla, Firefox, Opera, etc.
+        } else {
+            var parser = new DOMParser();
+            doc = parser.parseFromString(opml,"text/xml");
+        }
+
+        var outlines = doc.getElementsByTagName('outline');
+
+        var html = '';
+        for (var i = 0, max = outlines.length; i < max; i++) {
+
+            curr = outlines[i];
+            if (!curr.hasChildNodes()) {
+                title   = curr.getAttribute('title');
+                htmlurl = curr.getAttribute('htmlUrl');
+                type  = curr.getAttribute('type');
+                xmlurl  = curr.getAttribute('xmlUrl');
+                html += this.item_template.replace(/{TITLE}/, title)
+                    .replace(/{HTMLURL}/, htmlurl)
+                    .replace(/{XMLURL}/, xmlurl)
+                    .replace(/{XMLTYPE}/, type.toUpperCase());
+            }
+
+        }
+        var opml_title = doc.getElementsByTagName('title')[0].firstChild.nodeValue;
+        html = this.html_template.replace(/{ITEMS}/, html).replace(/{OPMLTITLE}/, opml_title);
+        return html;
+
+    }
+
+}</script>
+</head>
+<body>
+    <form action="">
+        <textarea onclick="this.select()" style="width: 100%; height: 200px;">
+&lt;opml version=&quot;1.0&quot;&gt;
+    &lt;head&gt;
+        &lt;title&gt;Stoyan subscriptions in Google Reader&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;outline title=&quot;marco&quot; text=&quot;marco&quot;&gt;
+            &lt;outline text=&quot; The Net is Dead - Life Beyond the Buzz &quot;
+                title=&quot; The Net is Dead - Life Beyond the Buzz &quot;
+                type=&quot;rss&quot; xmlUrl=&quot;http://www.i-marco.nl/weblog/rss.xml&quot; htmlUrl=&quot;http://www.i-marco.nl/weblog/index.php&quot;/&gt;
+        &lt;/outline&gt;
+        &lt;outline title=&quot;phpied&quot; text=&quot;phpied&quot;&gt;
+            &lt;outline text=&quot; phpied.com &quot; title=&quot; phpied.com &quot; type=&quot;rss&quot;
+                xmlUrl=&quot;http://www.phpied.com/feed/&quot; htmlUrl=&quot;http://www.phpied.com&quot;/&gt;
+        &lt;/outline&gt;
+        &lt;outline title=&quot;sitepoint&quot; text=&quot;sitepoint&quot;&gt;
+            &lt;outline text=&quot; SitePoint Blogs &quot; title=&quot; SitePoint Blogs &quot;
+                type=&quot;rss&quot; xmlUrl=&quot;http://www.sitepoint.com/blogs/feed/&quot; htmlUrl=&quot;http://www.sitepoint.com/blogs&quot;/&gt;
+        &lt;/outline&gt;
+        &lt;outline text=&quot;Bruce Eckel's Weblog&quot;
+            title=&quot;Bruce Eckel's Weblog&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://www.artima.com/weblogs/feeds/bloggers/beckel.rss&quot; htmlUrl=&quot;http://www.artima.com/weblogs/index.jsp?blogger=beckel&quot;/&gt;
+        &lt;outline text=&quot;Creating Passionate Users&quot;
+            title=&quot;Creating Passionate Users&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://headrush.typepad.com/creating_passionate_users/index.rdf&quot; htmlUrl=&quot;http://headrush.typepad.com/creating_passionate_users/&quot;/&gt;
+        &lt;outline text=&quot;Fleegix.org&quot; title=&quot;Fleegix.org&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://fleegix.org/xml/rss/feed.xml&quot; htmlUrl=&quot;http://fleegix.org/&quot;/&gt;
+        &lt;outline text=&quot;Isidoro's Blog&quot; title=&quot;Isidoro's Blog&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://black.filegrenade.com:8080/blog/?feed=rss2&quot; htmlUrl=&quot;http://black.filegrenade.com:8080/blog&quot;/&gt;
+        &lt;outline text=&quot;Ivo Web 2oo6&quot; title=&quot;Ivo Web 2oo6&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://www.ivo.stih4e.com/blog/?feed=rss2&quot; htmlUrl=&quot;http://www.ivo.stih4e.com/blog&quot;/&gt;
+        &lt;outline text=&quot;Let the Good Times Roll--by Guy Kawasaki&quot;
+            title=&quot;Let the Good Times Roll--by Guy Kawasaki&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://feeds.feedburner.com/letTheGoodTimesRollByGuyKawasaki&quot; htmlUrl=&quot;http://blog.guykawasaki.com/&quot;/&gt;
+        &lt;outline text=&quot;Official Google Blog&quot;
+            title=&quot;Official Google Blog&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://googleblog.blogspot.com/atom.xml&quot; htmlUrl=&quot;http://googleblog.blogspot.com&quot;/&gt;
+        &lt;outline text=&quot;Paul Graham: Unofficial RSS Feed&quot;
+            title=&quot;Paul Graham: Unofficial RSS Feed&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://www.joegrossberg.com/paulgraham.rss&quot; htmlUrl=&quot;http://www.paulgraham.comhttp://www.paulgraham.com&quot;/&gt;
+        &lt;outline text=&quot;PhilRenaud.com&quot; title=&quot;PhilRenaud.com&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://philrenaud.com/rss.php&quot; htmlUrl=&quot;http://philrenaud.com/&quot;/&gt;
+        &lt;outline text=&quot;PHP: Hypertext Preprocessor&quot;
+            title=&quot;PHP: Hypertext Preprocessor&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://www.php.net/news.rss&quot; htmlUrl=&quot;http://www.php.net/&quot;/&gt;
+        &lt;outline text=&quot;Poo-tee-weet&quot; title=&quot;Poo-tee-weet&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://pooteeweet.org/rss.xml&quot; htmlUrl=&quot;http://pooteeweet.org&quot;/&gt;
+        &lt;outline text=&quot;QuirksBlog&quot; title=&quot;QuirksBlog&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://www.quirksmode.org/blog/index.xml&quot; htmlUrl=&quot;http://www.quirksmode.org/blog/&quot;/&gt;
+        &lt;outline
+            text=&quot;SAP Developer Network SAP Weblogs by Piers Harding&quot;
+            title=&quot;SAP Developer Network SAP Weblogs by Piers Harding&quot;
+            type=&quot;rss&quot;
+            xmlUrl=&quot;http://weblogs.sdn.sap.com/pub/q/weblog_rss_author?x-author=8630&amp;amp;x-ver=1.0&amp;amp;x-mimetype=application%2Frdf%2Bxml&quot; htmlUrl=&quot;https://www.sdn.sap.com/sdn/weblogs.sdn?blog=/pub/u/8630&quot;/&gt;
+        &lt;outline text=&quot;Signal vs. Noise&quot; title=&quot;Signal vs. Noise&quot;
+            type=&quot;rss&quot; xmlUrl=&quot;http://37signals.com/svn/index_full.rdf&quot; htmlUrl=&quot;http://37signals.com/svn/&quot;/&gt;
+        &lt;outline text=&quot;Simon Willison's Weblog&quot;
+            title=&quot;Simon Willison's Weblog&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://simon.incutio.com/syndicate/rss1.0&quot; htmlUrl=&quot;http://simon.incutio.com/&quot;/&gt;
+        &lt;outline text=&quot;SitePoint.com&quot; title=&quot;SitePoint.com&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://www.sitepoint.com/recent.rdf&quot; htmlUrl=&quot;http://www.sitepoint.com/&quot;/&gt;
+        &lt;outline text=&quot;Stylegala | news&quot; title=&quot;Stylegala | news&quot;
+            type=&quot;rss&quot; xmlUrl=&quot;http://www.stylegala.com/feeds/news.xml&quot; htmlUrl=&quot;http://www.stylegala.com/&quot;/&gt;
+        &lt;outline text=&quot;Stylegala | public news&quot;
+            title=&quot;Stylegala | public news&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://www.stylegala.com/feeds/public-news.xml&quot; htmlUrl=&quot;http://www.stylegala.com/&quot;/&gt;
+        &lt;outline text=&quot;Web Standards with Imagination&quot;
+            title=&quot;Web Standards with Imagination&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://www.dustindiaz.com/feed/&quot; htmlUrl=&quot;http://www.dustindiaz.com&quot;/&gt;
+        &lt;outline text=&quot;Webmaster Central Blog&quot;
+            title=&quot;Webmaster Central Blog&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://googlewebmastercentral.blogspot.com/atom.xml&quot; htmlUrl=&quot;http://googlewebmastercentral.blogspot.com&quot;/&gt;
+        &lt;outline text=&quot;Yahoo! User Interface Blog&quot;
+            title=&quot;Yahoo! User Interface Blog&quot; type=&quot;rss&quot;
+            xmlUrl=&quot;http://feeds.yuiblog.com/YahooUserInterfaceBlog&quot; htmlUrl=&quot;http://yuiblog.com/blog&quot;/&gt;
+    &lt;/body&gt;
+&lt;/opml&gt;</textarea>
+        <br />
+        <input type="button" value="Parse" onclick="document.getElementById('result').value = opml2html.parse(this.form.elements[0].value)" />
+    </form>
+    <textarea id="result" style="width: 100%; height: 200px;"></textarea>
+</body>
+</html>
+
