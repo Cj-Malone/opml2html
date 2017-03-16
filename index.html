@@ -7,11 +7,11 @@
 
 var opml2html = {
 
-    html_container_template: '<h1>{OPMLTITLE}</h1>\n<ul>\n{ITEMS}</ul>',
+    html_container_template: '<h1>{OPMLTITLE}</h1>\n<{LISTTYPE}>\n{ITEMS}</{LISTTYPE}>',
     html_item_template: '    <li>[<a href="{XMLURL}">{XMLTYPE}</a>] <a href="{HTMLURL}">{TITLE}</a></li>\n',
     markdown_container_template: '# {OPMLTITLE}{ITEMS}',
-    markdown_item_template: '\n- \[[{XMLTYPE}]({XMLURL})\] [{TITLE}]({HTMLURL})',
-    parse: function(opml, output) {
+    markdown_item_template: '\n{LISTTYPE} \[[{XMLTYPE}]({XMLURL})\] [{TITLE}]({HTMLURL})',
+    parse: function(opml, output, output_list_type) {
 
         var doc;
         // code for IE
@@ -27,13 +27,16 @@ var opml2html = {
 
         var container_template;
         var item_template;
+        var list_type;
 
         if(output === "markdown") {
             container_template = this.markdown_container_template;
             item_template = this.markdown_item_template;
+            list_type = output_list_type === "ol" ? "1." : "-";
         } else {
             container_template = this.html_container_template;
             item_template = this.html_item_template;
+            list_type = output_list_type;
         }
 
         var outlines = doc.getElementsByTagName('outline');
@@ -50,13 +53,15 @@ var opml2html = {
                 output += item_template.replace(/{TITLE}/, title)
                     .replace(/{HTMLURL}/, htmlurl)
                     .replace(/{XMLURL}/, xmlurl)
-                    .replace(/{XMLTYPE}/, type.toUpperCase());
+                    .replace(/{XMLTYPE}/, type.toUpperCase())
+                    .replace(/{LISTTYPE}/, list_type);
             }
 
         }
         var opml_title = doc.getElementsByTagName('title')[0].firstChild.nodeValue;
         output = container_template.replace(/{ITEMS}/, output)
-            .replace(/{OPMLTITLE}/, opml_title);
+            .replace(/{OPMLTITLE}/, opml_title)
+            .replace(/{LISTTYPE}/, list_type);
         return output;
 
     }
@@ -143,9 +148,11 @@ var opml2html = {
     &lt;/body&gt;
 &lt;/opml&gt;</textarea>
         <br />
-        <input type="button" value="Parse" onclick="document.getElementById('result').value = opml2html.parse(this.form.elements['opml'].value, this.form.elements['output_format'].value)" />
+        <input type="button" value="Parse" onclick="document.getElementById('result').value = opml2html.parse(this.form.elements['opml'].value, this.form.elements['output_format'].value, this.form.elements['output_list_type'].value)" />
         <input type="radio" name="output_format" value="html" checked> HTML
         <input type="radio" name="output_format" value="markdown"> Markdown
+        <input type="radio" name="output_list_type" value="ul" checked> Unordered list
+        <input type="radio" name="output_list_type" value="ol"> Ordered list
     </form>
     <textarea id="result" style="width: 100%; height: 200px;"></textarea>
 </body>
