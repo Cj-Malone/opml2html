@@ -8,7 +8,7 @@
 var opml2html = {
 
     html_template: '<h1>{OPMLTITLE}</h1>\n<ul>{ITEMS}</ul>',
-    item_template: '<li>[<a href="{XMLURL}">RSS</a>] <a href="{HTMLURL}">{TITLE}</a></li>\n',
+    item_template: '<li>[<a href="{XMLURL}">{XMLTYPE}</a>] <a href="{HTMLURL}">{TITLE}</a></li>\n',
     parse: function(opml) {
 
         var doc;
@@ -32,8 +32,12 @@ var opml2html = {
             if (!curr.hasChildNodes()) {
                 title   = curr.getAttribute('title');
                 htmlurl = curr.getAttribute('htmlUrl');
+                type  = curr.getAttribute('type');
                 xmlurl  = curr.getAttribute('xmlUrl');
-                html += this.item_template.replace(/{TITLE}/, title).replace(/{HTMLURL}/, htmlurl).replace(/{XMLURL}/, xmlurl);
+                html += this.item_template.replace(/{TITLE}/, title)
+                    .replace(/{HTMLURL}/, htmlurl)
+                    .replace(/{XMLURL}/, xmlurl)
+                    .replace(/{XMLTYPE}/, type.toUpperCase());
             }
 
         }
@@ -140,3 +144,4 @@ var opml2html = {
 <div id="result">&nbsp;</div>
 </body>
 </html>
+
