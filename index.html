@@ -14,7 +14,7 @@
 <body>
   <form>
     <textarea id="opml" onclick="this.select()"></textarea>
-    <input type="button" value="Parse" onclick="document.getElementById('result').value = opml2html.parse(this.form.elements['opml'].value, this.form.elements['output_format'].value, this.form.elements['output_list_type'].value)">
+    <input type="button" value="Convert" onclick="document.getElementById('result').value = opml2html.parse(this.form.elements['opml'].value, this.form.elements['output_format'].value, this.form.elements['output_list_type'].value)">
     <input type="radio" name="output_format" value="html" checked> HTML
     <input type="radio" name="output_format" value="markdown"> Markdown |
     <input type="radio" name="output_list_type" value="ul" checked> Unordered list
