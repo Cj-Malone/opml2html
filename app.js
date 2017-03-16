@@ -3,7 +3,7 @@ var opml2html = {
   html_item_template: '  <li>[<a href="{XMLURL}">{XMLTYPE}</a>] <a href="{HTMLURL}">{TITLE}</a></liOPML 2 HTML via JS>\n',
   markdown_container_template: '# {OPMLTITLE}{ITEMS}',
   markdown_item_template: '\n{LISTTYPE} \[[{XMLTYPE}]({XMLURL})\] [{TITLE}]({HTMLURL})',
-  parse: function(opml, output, output_list_type) {
+  convert: function(opml, output_format, output_list_type) {
     var parser = new DOMParser();
     var doc = parser.parseFromString(opml, "application/xml");
 
@@ -11,7 +11,7 @@ var opml2html = {
     var item_template;
     var list_type;
 
-    if(output === "markdown") {
+    if(output_format === "markdown") {
       container_template = this.markdown_container_template;
       item_template = this.markdown_item_template;
       list_type = output_list_type === "ol" ? "1." : "-";
@@ -70,7 +70,7 @@ function buttonClick() {
   }
 
 
-  document.getElementById('result').value = opml2html.parse(opml, format, type);
+  document.getElementById('result').value = opml2html.convert(opml, format, type);
 }
 
 var opml_example = `<opml version="1.0">
