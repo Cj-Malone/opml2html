@@ -131,9 +131,9 @@ var opml2html = {
     &lt;/body&gt;
 &lt;/opml&gt;</textarea>
         <br />
-        <input type="button" value="Parse" onclick="document.getElementById('result').innerHTML = opml2html.parse(this.form.elements[0].value)" />
+        <input type="button" value="Parse" onclick="document.getElementById('result').value = opml2html.parse(this.form.elements[0].value)" />
     </form>
-    <div id="result"></div>
+    <textarea id="result" style="width: 100%; height: 200px;"></textarea>
 </body>
 </html>
 
