@@ -7,8 +7,8 @@
 
 var opml2html = {
 
-    html_template: '<h1>{OPMLTITLE}</h1>\n<ul>{ITEMS}</ul>',
-    item_template: '<li>[<a href="{XMLURL}">{XMLTYPE}</a>] <a href="{HTMLURL}">{TITLE}</a></li>\n',
+    html_template: '<h1>{OPMLTITLE}</h1>\n<ul>\n{ITEMS}</ul>',
+    item_template: '    <li>[<a href="{XMLURL}">{XMLTYPE}</a>] <a href="{HTMLURL}">{TITLE}</a></li>\n',
     parse: function(opml) {
 
         var doc;
@@ -46,8 +46,6 @@ var opml2html = {
         return html;
 
     }
-
-
 
 }</script>
 </head>
