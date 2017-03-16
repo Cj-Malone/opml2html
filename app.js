@@ -49,7 +49,31 @@ var opml2html = {
   }
 }
 
-opml_example = `<opml version="1.0">
+function buttonClick() {
+  var opml = document.getElementById('opml').value;
+  var format = "html";
+  var type = "ul";
+
+  var radios = document.getElementsByName('output_format');
+  for (var i = 0, length = radios.length; i < length; i++) {
+    if (radios[i].checked) {
+      format = radios[i].value;
+      break;
+    }
+  }
+  radios = document.getElementsByName('output_list_type');
+  for (var i = 0, length = radios.length; i < length; i++) {
+    if (radios[i].checked) {
+      type = radios[i].value;
+      break;
+    }
+  }
+
+
+  document.getElementById('result').value = opml2html.parse(opml, format, type);
+}
+
+var opml_example = `<opml version="1.0">
   <head>
     <title>Stoyan subscriptions in Google Reader</title>
   </head>
