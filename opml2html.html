@@ -7,9 +7,11 @@
 
 var opml2html = {
 
-    html_template: '<h1>{OPMLTITLE}</h1>\n<ul>\n{ITEMS}</ul>',
-    item_template: '    <li>[<a href="{XMLURL}">{XMLTYPE}</a>] <a href="{HTMLURL}">{TITLE}</a></li>\n',
-    parse: function(opml) {
+    html_container_template: '<h1>{OPMLTITLE}</h1>\n<ul>\n{ITEMS}</ul>',
+    html_item_template: '    <li>[<a href="{XMLURL}">{XMLTYPE}</a>] <a href="{HTMLURL}">{TITLE}</a></li>\n',
+    markdown_container_template: '# {OPMLTITLE}{ITEMS}',
+    markdown_item_template: '\n- \[[{XMLTYPE}]({XMLURL})\] [{TITLE}]({HTMLURL})',
+    parse: function(opml, output) {
 
         var doc;
         // code for IE
@@ -23,9 +25,20 @@ var opml2html = {
             doc = parser.parseFromString(opml,"text/xml");
         }
 
+        var container_template;
+        var item_template;
+
+        if(output === "markdown") {
+            container_template = this.markdown_container_template;
+            item_template = this.markdown_item_template;
+        } else {
+            container_template = this.html_container_template;
+            item_template = this.html_item_template;
+        }
+
         var outlines = doc.getElementsByTagName('outline');
 
-        var html = '';
+        var output = '';
         for (var i = 0, max = outlines.length; i < max; i++) {
 
             curr = outlines[i];
@@ -34,7 +47,7 @@ var opml2html = {
                 htmlurl = curr.getAttribute('htmlUrl');
                 type  = curr.getAttribute('type');
                 xmlurl  = curr.getAttribute('xmlUrl');
-                html += this.item_template.replace(/{TITLE}/, title)
+                output += item_template.replace(/{TITLE}/, title)
                     .replace(/{HTMLURL}/, htmlurl)
                     .replace(/{XMLURL}/, xmlurl)
                     .replace(/{XMLTYPE}/, type.toUpperCase());
@@ -42,8 +55,9 @@ var opml2html = {
 
         }
         var opml_title = doc.getElementsByTagName('title')[0].firstChild.nodeValue;
-        html = this.html_template.replace(/{ITEMS}/, html).replace(/{OPMLTITLE}/, opml_title);
-        return html;
+        output = container_template.replace(/{ITEMS}/, output)
+            .replace(/{OPMLTITLE}/, opml_title);
+        return output;
 
     }
 
@@ -51,7 +65,7 @@ var opml2html = {
 </head>
 <body>
     <form action="">
-        <textarea onclick="this.select()" style="width: 100%; height: 200px;">
+        <textarea id="opml" onclick="this.select()" style="width: 100%; height: 200px;">
 &lt;opml version=&quot;1.0&quot;&gt;
     &lt;head&gt;
         &lt;title&gt;Stoyan subscriptions in Google Reader&lt;/title&gt;
@@ -129,7 +143,9 @@ var opml2html = {
     &lt;/body&gt;
 &lt;/opml&gt;</textarea>
         <br />
-        <input type="button" value="Parse" onclick="document.getElementById('result').value = opml2html.parse(this.form.elements[0].value)" />
+        <input type="button" value="Parse" onclick="document.getElementById('result').value = opml2html.parse(this.form.elements['opml'].value, this.form.elements['output_format'].value)" />
+        <input type="radio" name="output_format" value="html" checked> HTML
+        <input type="radio" name="output_format" value="markdown"> Markdown
     </form>
     <textarea id="result" style="width: 100%; height: 200px;"></textarea>
 </body>
