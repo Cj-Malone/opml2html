@@ -1,9 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>OPML 2 HTML via JS</title>
-<script type="text/javascript">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>OPML 2 HTML via JS</title>
+    <script type="text/javascript">
 
 var opml2html = {
 
@@ -49,15 +49,11 @@ var opml2html = {
 
 
 
-}
-
-</script>
-
+}</script>
 </head>
 <body>
-
-<form action="">
-<textarea onclick="this.select()" style="width: 100%; height: 200px;">
+    <form action="">
+        <textarea onclick="this.select()" style="width: 100%; height: 200px;">
 &lt;opml version=&quot;1.0&quot;&gt;
     &lt;head&gt;
         &lt;title&gt;Stoyan subscriptions in Google Reader&lt;/title&gt;
@@ -133,15 +129,11 @@ var opml2html = {
             title=&quot;Yahoo! User Interface Blog&quot; type=&quot;rss&quot;
             xmlUrl=&quot;http://feeds.yuiblog.com/YahooUserInterfaceBlog&quot; htmlUrl=&quot;http://yuiblog.com/blog&quot;/&gt;
     &lt;/body&gt;
-&lt;/opml&gt;
-</textarea>
-<br />
-<input
-    type="button"
-    value="Parse"
-    onclick="document.getElementById('result').innerHTML = opml2html.parse(this.form.elements[0].value)" />
-</form>
-<div id="result">&nbsp;</div>
+&lt;/opml&gt;</textarea>
+        <br />
+        <input type="button" value="Parse" onclick="document.getElementById('result').innerHTML = opml2html.parse(this.form.elements[0].value)" />
+    </form>
+    <div id="result"></div>
 </body>
 </html>
 
